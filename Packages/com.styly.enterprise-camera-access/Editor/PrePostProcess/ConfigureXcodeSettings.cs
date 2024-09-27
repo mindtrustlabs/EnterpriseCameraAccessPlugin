@@ -9,7 +9,8 @@ using UnityEditor.Build.Reporting;
 public class ConfigureXcodeSettings : IPreprocessBuildWithReport
 {
     static readonly string LicensePath = "Enterprise.license";                                   // in the Assets directory
-    static readonly string EntitlementsXmlPath = "Editor/FilesToAdd/Entitlements.entitlements";  // in the package directory
+    static readonly string EntitlementsXmlPath = "Entitlements.entitlements";  // in the package directory
+    //static readonly string EntitlementsXmlPath = "Editor/FilesToAdd/Entitlements.entitlements";  // in the package directory
 
     public int callbackOrder => 0;
     public void OnPreprocessBuild(BuildReport report)
@@ -30,8 +31,9 @@ public class ConfigureXcodeSettings : IPreprocessBuildWithReport
         if (buildTarget == BuildTarget.VisionOS)
         {
             string LicenseAbsolutePath = Path.Combine(Application.dataPath, LicensePath);
+            string EntitlementsXmlAbsolutePath = Path.Combine(Application.dataPath, EntitlementsXmlPath);
             AddFileToProject(LicenseAbsolutePath, pathToBuiltProject);
-            string EntitlementsXmlAbsolutePath = Path.Combine(GetCurrentPackageAbsolutePath(), EntitlementsXmlPath);
+            //string EntitlementsXmlAbsolutePath = Path.Combine(GetCurrentPackageAbsolutePath(), EntitlementsXmlPath);
             AddEntitlementsFile(EntitlementsXmlAbsolutePath, pathToBuiltProject);
             AddKeyValueToPlist("NSEnterpriseMCAMUsageDescription", "This app capture images from the main camera", pathToBuiltProject);
             SetMinimumDeploymentVersion("XROS_DEPLOYMENT_TARGET", "2.0", pathToBuiltProject);
@@ -147,7 +149,10 @@ public class ConfigureXcodeSettings : IPreprocessBuildWithReport
     /// </summary>
     static string GetCurrentPackageAbsolutePath()
     {
+        Debug.LogError("x: "+System.Reflection.MethodInfo.GetCurrentMethod().DeclaringType.Assembly);
         var MyPackageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(System.Reflection.MethodInfo.GetCurrentMethod().DeclaringType.Assembly);
+
+        Debug.Log("here: " + MyPackageInfo.resolvedPath);
         string path = MyPackageInfo.resolvedPath;
 
         return path;
