@@ -56,7 +56,7 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
 
     void Start()
     {
-        Texture.allowThreadedTextureCreation = true;
+       // Texture.allowThreadedTextureCreation = true;
 #if USE_PICOXR && UNITY_ANDROID && !UNITY_EDITOR
         PicoStart();
         return;
