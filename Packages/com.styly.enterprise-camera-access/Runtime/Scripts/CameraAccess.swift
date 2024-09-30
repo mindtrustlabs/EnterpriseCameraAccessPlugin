@@ -34,7 +34,7 @@ func startCameraFeed() async {
         // Skip if the last call was less than X second ago
         let skipSeconds = 0.1
         if lastCalledTime == nil || currentTime.timeIntervalSince(lastCalledTime!) >= skipSeconds {
-            //sendPixelBufferToUnity(imageBuffer)
+            sendPixelBufferToUnity(imageBuffer)
             lastCalledTime = currentTime
         }
     }
@@ -42,6 +42,8 @@ func startCameraFeed() async {
 
 // Send the pixel buffer to Unity
 func sendPixelBufferToUnity(_ pixelBuffer: CVPixelBuffer) {
+
+
     CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
 
     // Convert CVPixelBuffer to UIImage
