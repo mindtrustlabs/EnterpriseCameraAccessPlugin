@@ -34,7 +34,7 @@ func startCameraFeed() async {
         // Skip if the last call was less than X second ago
         let skipSeconds = 0.1
         if lastCalledTime == nil || currentTime.timeIntervalSince(lastCalledTime!) >= skipSeconds {
-            sendPixelBufferToUnity(imageBuffer)
+            //sendPixelBufferToUnity(imageBuffer)
             lastCalledTime = currentTime
         }
     }
