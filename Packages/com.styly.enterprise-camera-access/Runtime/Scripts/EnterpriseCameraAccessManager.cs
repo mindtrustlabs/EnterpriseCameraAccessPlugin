@@ -146,6 +146,7 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
 
     void StartWebCam(string deviceName)
     {
+        Debug.Log("Web Came Device Started: " + deviceName);
         webCamTexture = new WebCamTexture(deviceName);
         webCamTexture.Play();
     }
@@ -189,10 +190,13 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
 
             // tmpTexture に画像を読み込む
             bool loadSuccess = tex.LoadImage(imageBytes);
-
+           
             if (!loadSuccess)
             {
                 Debug.LogError("Failed to load image from byte array.");
+            } else
+            {
+                Debug.LogError("Success! " + imageBytes.Length);
             }
         }
         catch (Exception ex)
