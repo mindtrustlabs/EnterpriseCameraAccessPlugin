@@ -50,6 +50,7 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
     void OnEnable()
     {
 #if UNITY_VISIONOS && !UNITY_EDITOR
+ 
         SetNativeCallbackOfCameraAccess(CallbackFromNative);
 #endif
     }
@@ -63,6 +64,8 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
 #endif
 
 #if UNITY_VISIONOS && !UNITY_EDITOR
+ 
+        SetNativeCallbackOfCameraAccess(CallbackFromNative);
         // Start the main camera capture
         StartVisionProMainCameraCapture();
 
@@ -96,6 +99,7 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
         return;
 #endif
 
+	Debug.LogError("On disable... callback is now null");
 #if UNITY_VISIONOS && !UNITY_EDITOR
         SetNativeCallbackOfCameraAccess(null);
         return;
@@ -216,7 +220,7 @@ public class EnterpriseCameraAccessManager : MonoBehaviour
     delegate void CallbackDelegate(string command);
     [MonoPInvokeCallback(typeof(CallbackDelegate))]
     static void CallbackFromNative(string command)
-    {
+    { 
         Instance.tempBase64String = command;
     }
 

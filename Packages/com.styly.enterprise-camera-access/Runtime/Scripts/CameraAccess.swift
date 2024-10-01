@@ -22,21 +22,24 @@ func startCameraFeed() async {
     let authResult = await arKitSession.queryAuthorization(for: [.cameraAccess])
     print(authResult)
     let cameraTracking = CameraFrameProvider()
-    do { try await arKitSession.run([cameraTracking]) } catch { return }
+    do { try await arKitSession.run([cameraTracking]) } catch {
+        print("unable to track camera")
+        return
+    }
 
     // Then receive the new camera frame:
     for await i in cameraTracking.cameraFrameUpdates(
         for: .supportedVideoFormats(for: .main, cameraPositions: [.left]).first!)!
     {
         let imageBuffer: CVPixelBuffer = i.primarySample.pixelBuffer
-        let currentTime = Date()
+//        let currentTime = Date()
 
         // Skip if the last call was less than X second ago
-        let skipSeconds = 0.1
-        if lastCalledTime == nil || currentTime.timeIntervalSince(lastCalledTime!) >= skipSeconds {
+        //let skipSeconds = 0.1
+        //if lastCalledTime == nil || currentTime.timeIntervalSince(lastCalledTime!) >= skipSeconds {
             sendPixelBufferToUnity(imageBuffer)
-            lastCalledTime = currentTime
-        }
+         //   lastCalledTime = currentTime
+        //}
     }
 }
 
@@ -49,11 +52,16 @@ func sendPixelBufferToUnity(_ pixelBuffer: CVPixelBuffer) {
     // Convert CVPixelBuffer to UIImage
     let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
     let context = CIContext()
-    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
+    guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+        print("failed to create image")
+        return
+    }
+    
     let uiImage = UIImage(cgImage: cgImage)
 
     // Convert UIImage to Data.
     guard let imageData = uiImage.jpegData(compressionQuality: 1.0) else {
+        print("jpeg failed")
         return
     }
 
@@ -80,9 +88,10 @@ func setNativeCallbackOfCameraAccess(_ delegate: CallbackDelegateTypeOfCameraAcc
 public func CallCSharpCallbackOfCameraAccess(_ str: String)
 {
     if (sCallbackDelegateOfCameraAccess == nil) {
+        print("null delegate. not sending")
         return
     }
-
+ 
     str.withCString {
         sCallbackDelegateOfCameraAccess!($0)
     }
