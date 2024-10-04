@@ -89,8 +89,8 @@ func startCameraFeed() async {
            if(isRunning) sendPixelBufferToUnity(imageBuffer)
          //   lastCalledTime = currentTime
         //}
-        */
-    }
+      
+    }  */
 }
 
 @_cdecl("stopCapture")
